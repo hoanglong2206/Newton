@@ -6,185 +6,313 @@ let distanceTravelled = 0;
 let totalTime = 0;
 let velocity = 0;
 let acceleration = 0;
+let stopDistance = null;
+let stopVelocity = null; // New variable for stop velocity
 
 // Default values
 const defaultValues = {
-    mass: 100,
-    frictionCoefficient: 0,
-    thrust: 100
+	mass: 100,
+	frictionCoefficient: 0,
+	thrust: 100,
 };
 
 // Event listeners
-document.getElementById('simulate').addEventListener('click', startSimulation);
-document.getElementById('reset').addEventListener('click', reset);
-document.getElementById('togglePause').addEventListener('click', togglePause);
+document.getElementById("simulate").addEventListener("click", startSimulation);
+document.getElementById("reset").addEventListener("click", reset);
+document.getElementById("togglePause").addEventListener("click", togglePause);
+document
+	.getElementById("toggleVectors")
+	.addEventListener("click", toggleVectors);
 
-document.getElementById('massValue').addEventListener('input', () => updateDisplayValue('massValue', 'massDisplay'));
-document.getElementById('frictionValue').addEventListener('input', () => updateDisplayValue('frictionValue', 'frictionDisplay', 2));
-document.getElementById('forceValue').addEventListener('input', () => updateDisplayValue('forceValue', 'forceDisplay'));
+document
+	.getElementById("massValue")
+	.addEventListener("input", () =>
+		updateDisplayValue("massValue", "massDisplay"),
+	);
+document
+	.getElementById("frictionValue")
+	.addEventListener("input", () =>
+		updateDisplayValue("frictionValue", "frictionDisplay", 2),
+	);
+document
+	.getElementById("forceValue")
+	.addEventListener("input", () =>
+		updateDisplayValue("forceValue", "forceDisplay"),
+	);
+document
+	.getElementById("stopDistanceValue")
+	.addEventListener("input", () =>
+		updateDisplayValue("stopDistanceValue", "stopDistanceDisplay"),
+	);
+document
+	.getElementById("stopVelocityValue")
+	.addEventListener("input", () =>
+		updateDisplayValue("stopVelocityValue", "stopVelocityDisplay"),
+	);
 
+document.getElementById("openModalButton").addEventListener("click", openModal);
+document.querySelector(".close-button").addEventListener("click", closeModal);
+window.addEventListener("click", (event) => {
+	if (event.target === document.getElementById("inputModal")) {
+		closeModal();
+	}
+});
+
+function drawForceVectors(thrust, frictionForce, gravityForce, normalForce) {
+	const thrustVector = document.getElementById("thrustVector");
+	const frictionVector = document.getElementById("frictionVector");
+	const gravityVector = document.getElementById("gravityVector");
+	const normalVector = document.getElementById("normalVector");
+
+	console.log(
+		"Thrust:",
+		thrust,
+		"Friction:",
+		frictionForce,
+		"Gravity:",
+		gravityForce,
+		"Normal:",
+		normalForce,
+	);
+
+	thrustVector.style.width = `${thrust / 15}px`;
+	frictionVector.style.width = `${frictionForce / 15}px`;
+	gravityVector.style.height = `${gravityForce / 35}px`;
+	normalVector.style.height = `${normalForce / 35}px`;
+
+	thrustVector.style.display = "block";
+	frictionVector.style.display = "block";
+	gravityVector.style.display = "block";
+	normalVector.style.display = "block";
+
+	// Add arrowheads
+	thrustVector.innerHTML = `<div class="arrowhead right"></div>`;
+	frictionVector.innerHTML = `<div class="arrowhead left"></div>`;
+	gravityVector.innerHTML = `<div class="arrowhead down"></div>`;
+	normalVector.innerHTML = `<div class="arrowhead up"></div>`;
+}
+
+function hideForceVectors() {
+	document.getElementById("thrustVector").style.display = "none";
+	document.getElementById("frictionVector").style.display = "none";
+	document.getElementById("gravityVector").style.display = "none";
+	document.getElementById("normalVector").style.display = "none";
+}
 
 function startSimulation() {
-    if (carMoving) return;
+	if (carMoving) return;
 
-    const mass = parseFloat(document.getElementById('massValue').value);
-    const frictionCoefficient = parseFloat(document.getElementById('frictionValue').value);
-    const thrust = parseFloat(document.getElementById('forceValue').value);
+	const mass = parseFloat(document.getElementById("massValue").value);
+	const frictionCoefficient = parseFloat(
+		document.getElementById("frictionValue").value,
+	);
+	const thrust = parseFloat(document.getElementById("forceValue").value);
+	stopDistance = parseFloat(document.getElementById("stopDistanceValue").value);
+	stopVelocity = parseFloat(document.getElementById("stopVelocityValue").value); // Get stop velocity value
 
-    const frictionForce = frictionCoefficient * mass * 9.8;
+	const gravityForce = mass * 9.8;
+	const frictionForce = frictionCoefficient * gravityForce;
+	const normalForce = gravityForce;
 
-    if (thrust <= frictionForce) {
-        alert(`Lực đẩy không đủ để di chuyển xe. Bạn cần ít nhất ${Math.ceil(frictionForce / 10) * 10} N để xe có thể di chuyển.`);
-        return;
-    }
+	if (thrust <= frictionForce) {
+		alert(
+			`Lực đẩy không đủ để di chuyển xe. Bạn cần ít nhất ${
+				Math.ceil(frictionForce / 10) * 10
+			} N để xe có thể di chuyển.`,
+		);
+		return;
+	}
 
-    document.querySelectorAll('input[type="range"]').forEach(input => input.disabled = true);
-    document.getElementById('acceleration').textContent = '0';
+	document
+		.querySelectorAll('input[type="range"]')
+		.forEach((input) => (input.disabled = true));
+	document.getElementById("acceleration").textContent = "0";
 
-    distanceTravelled = 0;
-    totalTime = 0;
-    velocity = 0;
-    acceleration = 0;
-    carMoving = true;
-    isPaused = false;
-    document.getElementById('togglePause').disabled = false;
-    document.getElementById('simulate').disabled = true;
-    previousTimestamp = performance.now();
-    animationFrameId = requestAnimationFrame(moveCar);
+	distanceTravelled = 0;
+	totalTime = 0;
+	velocity = 0;
+	acceleration = 0;
+	carMoving = true;
+	isPaused = false;
+	document.getElementById("togglePause").disabled = false;
+	document.getElementById("simulate").disabled = true;
+	previousTimestamp = performance.now();
+	animationFrameId = requestAnimationFrame(moveCar);
+
+	drawForceVectors(thrust, frictionForce, gravityForce, normalForce);
 }
 
 function moveCar(timestamp) {
-    if (!carMoving || isPaused) return;
+	if (!carMoving || isPaused) return;
 
-    const deltaTime = (timestamp - previousTimestamp) / 1000;
-    previousTimestamp = timestamp;
+	const deltaTime = (timestamp - previousTimestamp) / 1000;
+	previousTimestamp = timestamp;
 
-    const mass = parseFloat(document.getElementById('massValue').value);
-    const frictionCoefficient = parseFloat(document.getElementById('frictionValue').value);
-    const thrust = parseFloat(document.getElementById('forceValue').value);
+	const mass = parseFloat(document.getElementById("massValue").value);
+	const frictionCoefficient = parseFloat(
+		document.getElementById("frictionValue").value,
+	);
+	let thrust = parseFloat(document.getElementById("forceValue").value);
 
-    // Calculate friction force
-    const frictionForce = frictionCoefficient * mass * 9.8;
+	// Calculate friction force
+	const frictionForce = frictionCoefficient * mass * 9.8;
 
-    // Calculate net force
-    let netForce = thrust - frictionForce;
+	// Calculate net force
+	let netForce = thrust - frictionForce;
 
-    // Determine acceleration based on net force
-    if (velocity === 0 && netForce <= 0) {
-        acceleration = 0;
-        velocity = 0;
-    } else {
-        acceleration = netForce / mass;
+	// Stop applying thrust if velocity reaches stop velocity
+	if (stopVelocity && velocity >= stopVelocity) {
+		thrust = 0;
+		netForce = -frictionForce;
+	}
 
-        // Update velocity
-        velocity += acceleration * deltaTime;
+	// Determine acceleration based on net force
+	if (velocity === 0 && netForce <= 0) {
+		acceleration = 0;
+		velocity = 0;
+	} else {
+		acceleration = netForce / mass;
 
-        // Ensure velocity doesn't go negative
-        if (velocity < 0) {
-            velocity = 0;
-            acceleration = 0;
-        }
+		// Update velocity
+		velocity += acceleration * deltaTime;
 
-        // Update distance
-        distanceTravelled += velocity * deltaTime;
-    }
+		// Ensure velocity doesn't go negative
+		if (velocity < 0) {
+			velocity = 0;
+			acceleration = 0;
+		}
 
-    totalTime += deltaTime;
+		// Update distance
+		distanceTravelled += velocity * deltaTime;
+	}
 
-    updateSimulationDisplay(velocity, distanceTravelled, totalTime, acceleration);
-    moveCarElement(velocity, deltaTime);
+	totalTime += deltaTime;
 
-    animationFrameId = requestAnimationFrame(moveCar);
+	// Check if the car has reached the stopping distance
+	if (stopDistance && distanceTravelled >= stopDistance) {
+		return;
+	}
+
+	updateSimulationDisplay(velocity, distanceTravelled, totalTime, acceleration);
+	moveCarElement(velocity, deltaTime);
+
+	animationFrameId = requestAnimationFrame(moveCar);
 }
 
 function reset() {
-    updateValue('massValue', defaultValues.mass);
-    updateValue('frictionValue', defaultValues.frictionCoefficient);
-    updateValue('forceValue', defaultValues.thrust);
+	updateValue("massValue", defaultValues.mass);
+	updateValue("frictionValue", defaultValues.frictionCoefficient);
+	updateValue("forceValue", defaultValues.thrust);
+	updateValue("stopDistanceValue", 0);
+	updateValue("stopVelocityValue", 0); // Reset stop velocity value
 
-    document.getElementById('acceleration').textContent = '0';
-    updateSimulationDisplay(0, 0, 0, 0);
-    resetCarPosition();
+	document.getElementById("acceleration").textContent = "0";
+	updateSimulationDisplay(0, 0, 0, 0);
+	resetCarPosition();
 
-    carMoving = false;
-    isPaused = false;
-    distanceTravelled = 0;
-    totalTime = 0;
-    velocity = 0;
-    acceleration = 0;
-    previousTimestamp = null;
+	carMoving = false;
+	isPaused = false;
+	distanceTravelled = 0;
+	totalTime = 0;
+	velocity = 0;
+	acceleration = 0;
+	previousTimestamp = null;
 
-    document.getElementById('togglePause').textContent = 'Tạm dừng';
-    document.getElementById('simulate').disabled = false;
-    document.querySelectorAll('input[type="range"]').forEach(input => input.disabled = false);
-    cancelAnimationFrame(animationFrameId);
-    document.getElementById('togglePause').disabled = true;
+	document.getElementById("togglePause").textContent = "Tạm dừng";
+	document.getElementById("simulate").disabled = false;
+	document
+		.querySelectorAll('input[type="range"]')
+		.forEach((input) => (input.disabled = false));
+	cancelAnimationFrame(animationFrameId);
+	document.getElementById("togglePause").disabled = true;
+
+	hideForceVectors();
 }
 
 function togglePause() {
-    if (!carMoving) return;
+	if (!carMoving) return;
 
-    isPaused = !isPaused;
-    document.getElementById('togglePause').textContent = isPaused ? 'Tiếp tục' : 'Tạm dừng';
+	isPaused = !isPaused;
+	document.getElementById("togglePause").textContent = isPaused
+		? "Tiếp tục"
+		: "Tạm dừng";
 
-    if (!isPaused) {
-        previousTimestamp = performance.now();
-        animationFrameId = requestAnimationFrame(moveCar);
-    }
+	if (!isPaused) {
+		previousTimestamp = performance.now();
+		animationFrameId = requestAnimationFrame(moveCar);
+	}
 }
 
 function updateValue(id, value) {
-    const element = document.getElementById(id);
-    if (element) {
-        element.value = value;
-        const displayIdMap = {
-            'massValue': 'massDisplay',
-            'frictionValue': 'frictionDisplay',
-            'forceValue': 'forceDisplay'
-        };
-        const displayId = displayIdMap[id];
-        updateDisplayValue(id, displayId, id === 'frictionValue' ? 2 : 0);
-    }
+	const element = document.getElementById(id);
+	if (element) {
+		element.value = value;
+		const displayIdMap = {
+			massValue: "massDisplay",
+			frictionValue: "frictionDisplay",
+			forceValue: "forceDisplay",
+			stopDistanceValue: "stopDistanceDisplay",
+			stopVelocityValue: "stopVelocityDisplay", // New mapping for stop velocity
+		};
+		const displayId = displayIdMap[id];
+		updateDisplayValue(id, displayId, id === "frictionValue" ? 2 : 0);
+	}
 }
 
 function updateDisplayValue(inputId, displayId, decimalPlaces = 0) {
-    const inputElement = document.getElementById(inputId);
-    const displayElement = document.getElementById(displayId);
-    if (inputElement && displayElement) {
-        const value = parseFloat(inputElement.value).toFixed(decimalPlaces);
-        displayElement.textContent = value;
-    }
+	const inputElement = document.getElementById(inputId);
+	const displayElement = document.getElementById(displayId);
+	if (inputElement && displayElement) {
+		const value = parseFloat(inputElement.value).toFixed(decimalPlaces);
+		displayElement.textContent = value;
+	}
 }
 
 function updateSimulationDisplay(velocity, distance, time, acceleration) {
-    document.getElementById('velocity').textContent = velocity.toFixed(2);
-    document.getElementById('distance').textContent = distance.toFixed(2);
-    document.getElementById('time').textContent = time.toFixed(2);
-    document.getElementById('acceleration').textContent = acceleration.toFixed(2);
+	document.getElementById("velocity").textContent = velocity.toFixed(2);
+	document.getElementById("distance").textContent = distance.toFixed(2);
+	document.getElementById("time").textContent = time.toFixed(2);
+	document.getElementById("acceleration").textContent = acceleration.toFixed(2);
 }
 
 function moveCarElement(velocity, deltaTime) {
-    const road = document.getElementById('road');
-    let backgroundPositionX = parseFloat(getComputedStyle(road).backgroundPositionX) || 0;
-    backgroundPositionX -= velocity * deltaTime * 100; // Adjust the factor to control scrolling speed
+	const road = document.getElementById("road");
+	let backgroundPositionX =
+		parseFloat(getComputedStyle(road).backgroundPositionX) || 0;
+	backgroundPositionX -= velocity * deltaTime * 100; // Adjust the factor to control scrolling speed
 
-    road.style.backgroundPositionX = `${backgroundPositionX}px`;
+	road.style.backgroundPositionX = `${backgroundPositionX}px`;
 }
 
 function resetCarPosition() {
-    const road = document.getElementById('road');
-    road.style.backgroundPositionX = '0px';
+	const road = document.getElementById("road");
+	road.style.backgroundPositionX = "0px";
 }
 
 function toggleAdditionalConditions() {
-    const additionalConditions = document.getElementById('additionalConditions');
-    const checkbox = document.getElementById('conditionCheckbox');
-    additionalConditions.style.display = checkbox.checked ? 'flex' : 'none';
+	const additionalConditions = document.getElementById("additionalConditions");
+	const checkbox = document.getElementById("conditionCheckbox");
+	additionalConditions.style.display = checkbox.checked ? "flex" : "none";
 }
 
 // JavaScript for help icons
-document.querySelectorAll('.help-icon').forEach(icon => {
-    icon.addEventListener('click', () => {
-        icon.classList.toggle('active');
-    });
+document.querySelectorAll(".help-icon").forEach((icon) => {
+	icon.addEventListener("click", () => {
+		icon.classList.toggle("active");
+	});
 });
+
+function openModal() {
+	document.getElementById("inputModal").style.display = "block";
+}
+
+function closeModal() {
+	document.getElementById("inputModal").style.display = "none";
+}
+
+function toggleVectors() {
+	const vectors = document.querySelectorAll(".force-vector");
+	vectors.forEach((vector) => {
+		vector.style.display = vector.style.display === "none" ? "block" : "none";
+	});
+}

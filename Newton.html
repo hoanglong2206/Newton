@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,28 +8,11 @@
     <link rel="icon" href="https://bom.so/JLWQZS" type="image/png">
     <link rel="stylesheet" href="Newton.css">
 </head>
+
 <body>
     <button id="customButton" onclick="window.location.href='../index.html'">Return</button>
     <div class="container">
         <h1 class="my-4">Simulate Newton's Second Law</h1>
-        <!-- Phần input được giữ nguyên -->
-        <div class="row">
-            <div class="col-md-4 mb-3 input-container">
-                <label for="massValue">Khối lượng xe (m):</label>
-                <input type="range" id="massValue" name="massValue" min="10" max="500" step="10" value="100">
-                <span id="massDisplay">100</span> kg
-            </div>
-            <div class="col-md-4 mb-3 input-container">
-                <label for="frictionValue">Hệ số ma sát (μ):</label>
-                <input type="range" id="frictionValue" name="frictionValue" min="0" max="1" step="0.01" value="0">
-                <span id="frictionDisplay">0</span>
-            </div>
-            <div class="col-md-4 mb-3 input-container">
-                <label for="forceValue">Lực đẩy (F):</label>
-                <input type="range" id="forceValue" name="forceValue" min="0" max="1000" step="10" value="100">
-                <span id="forceDisplay">100</span> N
-            </div>
-        </div>
         <!-- Di chuyển các nút điều khiển và thông số đo được vào #road -->
         <div id="road">
             <!-- Bảng điều khiển -->
@@ -37,6 +21,7 @@
                     <button id="simulate">Mô phỏng</button>
                     <button id="togglePause" disabled>Tạm dừng</button>
                     <button id="reset">Reset</button>
+                    <button id="openModalButton">Open Modal</button>
                 </div>
                 <div class="measurements">
                     <div class="acceleration-container">
@@ -54,7 +39,50 @@
                 </div>
             </div>
             <!-- Phần tử xe -->
-            <div id="car"></div>
+            <div id="car">
+                <div id="thrustVector" class="force-vector thrust"></div>
+                <div id="frictionVector" class="force-vector friction"></div>
+                <div id="gravityVector" class="force-vector gravity"></div>
+                <div id="normalVector" class="force-vector normal"></div>
+            </div>
+        </div>
+
+        <div id="inputModal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <!-- Phần input được giữ nguyên -->
+                <div class="row">
+                    <div class="col-md-4 mb-3 input-container">
+                        <label for="massValue">Khối lượng xe (m):</label>
+                        <input type="range" id="massValue" name="massValue" min="10" max="500" step="10" value="100">
+                        <span id="massDisplay">100</span> kg
+                    </div>
+                    <div class="col-md-4 mb-3 input-container">
+                        <label for="frictionValue">Hệ số ma sát (μ):</label>
+                        <input type="range" id="frictionValue" name="frictionValue" min="0" max="1" step="0.01"
+                            value="0">
+                        <span id="frictionDisplay">0</span>
+                    </div>
+                    <div class="col-md-4 mb-3 input-container">
+                        <label for="forceValue">Lực đẩy (F):</label>
+                        <input type="range" id="forceValue" name="forceValue" min="0" max="1000" step="10" value="100">
+                        <span id="forceDisplay">100</span> N
+                    </div>
+                    <div class="col-md-4 mb-3 input-container">
+                        <label for="stopDistanceValue">Quãng đường dừng (m):</label>
+                        <input type="range" id="stopDistanceValue" name="stopDistanceValue" min="0" max="1000" step="10"
+                            value="0">
+                        <span id="stopDistanceDisplay">0</span> m
+                    </div>
+                    <div class="col-md-4 mb-3 input-container">
+                        <label for="stopVelocityValue">Vận tốc dừng (m/s):</label>
+                        <input type="range" id="stopVelocityValue" name="stopVelocityValue" min="0" max="100" step="1"
+                            value="0">
+                        <span id="stopVelocityDisplay">0</span> m/s
+                    </div>
+                </div>
+                <button id="toggleVectors">Toggle Vectors</button>
+            </div>
         </div>
     </div>
     <script src="Newton.js"></script>
@@ -63,4 +91,5 @@
         <p class="sub-footer-logo"> Bản quyền © 2024 Vũ Việt Dũng.</p>
     </footer>
 </body>
+
 </html>

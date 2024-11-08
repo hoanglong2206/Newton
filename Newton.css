@@ -1,216 +1,342 @@
 /* Đặt lại các kiểu mặc định 
    để đảm bảo giao diện nhất quán trên các trình duyệt khác nhau */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-    background-color: #c4c7c9;
-    color: #1b0000;
-    line-height: 1.5;
-    position: relative;
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+	text-align: center;
+	margin: 0;
+	padding: 0;
+	background-color: #c4c7c9;
+	color: #1b0000;
+	line-height: 1.5;
+	position: relative;
 }
 
 /* Container chính bao quát toàn bộ nội dung trên trang */
 .container {
-    width: 100%;
-    min-height: 100vh;
-    position: relative;
+	width: 100%;
+	min-height: 100vh;
+	position: relative;
 }
 
 /* Giảm kích thước của phần điền ô nhập (để gọn hơn) */
 .input-container {
-    padding: 5px;
-    background-color: #af6dff;
-    border: 3px ridge #bc86fe;
-    display: inline-block;
-    font-size: 16px;
-    margin: 5px;
-    border-radius: 5px;
+	padding: 5px;
+	background-color: #af6dff;
+	border: 3px ridge #bc86fe;
+	display: inline-block;
+	font-size: 16px;
+	margin: 5px;
+	border-radius: 5px;
 }
 
 /* Các container thông số (gia tốc, vận tốc, quãng đường, thời gian) để nhận diện rõ ràng */
-.acceleration-container, .velocity-container, .distance-container, .time-container {
-    margin: 8px 5px;
-    padding: 5px;
-    background-color: #ffeb3b;
-    border: 2px solid #ffc107;
-    display: inline-block;
-    font-size: 16px;
-    border-radius: 5px;
+.acceleration-container,
+.velocity-container,
+.distance-container,
+.time-container {
+	margin: 8px 5px;
+	padding: 5px;
+	background-color: #ffeb3b;
+	border: 2px solid #ffc107;
+	display: inline-block;
+	font-size: 16px;
+	border-radius: 5px;
 }
 
 /* Định dạng thanh trượt cho đầu vào */
 input[type="range"] {
-    width: 200px;
-    height: 6px;
-    background: #ddd;
-    border-radius: 5px;
-    outline: none;
-    margin: 5px 0;
+	width: 200px;
+	height: 6px;
+	background: #ddd;
+	border-radius: 5px;
+	outline: none;
+	margin: 5px 0;
 }
 
 /* Định dạng đầu trượt trên thanh */
-input[type="range"]::-webkit-slider-thumb, input[type="range"]::-moz-range-thumb {
-    width: 15px;
-    height: 15px;
-    background: #007bff;
-    border-radius: 50%;
-    cursor: pointer;
+input[type="range"]::-webkit-slider-thumb,
+input[type="range"]::-moz-range-thumb {
+	width: 15px;
+	height: 15px;
+	background: #007bff;
+	border-radius: 50%;
+	cursor: pointer;
 }
 
 /* Định dạng label cho các thành phần giao diện */
 label {
-    font-size: 18px;
-    color: #ffffff;
-    margin-bottom: 5px;
-    display: block;
+	font-size: 18px;
+	color: #ffffff;
+	margin-bottom: 5px;
+	display: block;
 }
 
 /* Định dạng nút nhấn */
 button {
-    margin: 10px;
-    padding: 8px 16px;
-    font-size: 14px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
-    background-color: #007bff;
-    color: #fff;
+	margin: 10px;
+	padding: 8px 16px;
+	font-size: 14px;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
+	background-color: #007bff;
+	color: #fff;
 }
 
 /* Trạng thái nút khi bị vô hiệu hoá */
 button:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-    background-color: #ccc;
+	cursor: not-allowed;
+	opacity: 0.6;
+	background-color: #ccc;
 }
 
 /* Hiệu ứng khi nút được di chuột qua */
 button:not(:disabled):hover {
-    background-color: #0056b3;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transform: translateY(-2px);
+	background-color: #0056b3;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	transform: translateY(-2px);
 }
 
 /* Hiệu ứng khi nút được nhấn */
 button:not(:disabled):active {
-    background-color: #004494;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transform: translateY(1px);
+	background-color: #004494;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	transform: translateY(1px);
 }
 
 /* Định dạng xe (ảnh xe hiển thị) */
 #car {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 200px;
-    height: 150px;
-    background: url('./car.png') no-repeat;
-    background-size: contain;
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 200px;
+	height: 150px;
+	background: url("./car.png") no-repeat;
+	background-size: contain;
 }
 
 /* Định dạng đường (ảnh đường) */
 #road {
-    position: relative;
-    width: 100%;
-    height: 600px;
-    background-image: url('./road2d.jpg');
-    background-repeat: repeat-x;
-    background-size: auto 100%;
-    background-position: center;
-    overflow: hidden;
+	position: relative;
+	width: 100%;
+	height: 600px;
+	background-image: url("./road2d.jpg");
+	background-repeat: repeat-x;
+	background-size: auto 100%;
+	background-position: center;
+	overflow: hidden;
 }
 
 /* Định dạng nút trở về */
 #customButton {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 10;
-    background: linear-gradient(135deg, #36a8ce, #5ebbd9);
-    color: #fff;
-    font-size: 16px;
-    border: none;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-    transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	z-index: 10;
+	background: linear-gradient(135deg, #36a8ce, #5ebbd9);
+	color: #fff;
+	font-size: 16px;
+	border: none;
+	border-radius: 50%;
+	width: 60px;
+	height: 60px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+	transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
 }
 
 /* Hiệu ứng hover và active cho nút trở về */
 #customButton:hover {
-    background: linear-gradient(135deg, #5ebbd9, #36a8ce);
-    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2), 0 0 15px rgba(94, 187, 217, 0.5);
-    transform: scale(1.1);
+	background: linear-gradient(135deg, #5ebbd9, #36a8ce);
+	box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2), 0 0 15px rgba(94, 187, 217, 0.5);
+	transform: scale(1.1);
 }
 
 #customButton:active {
-    background: linear-gradient(135deg, #b0e0e6, #5ebbd9);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transform: scale(1);
+	background: linear-gradient(135deg, #b0e0e6, #5ebbd9);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	transform: scale(1);
 }
 
 /* Định dạng khi nút trở về được focus */
 #customButton:focus {
-    outline: none;
-    box-shadow: 0 0 0 4px rgba(94, 187, 217, 0.5);
+	outline: none;
+	box-shadow: 0 0 0 4px rgba(94, 187, 217, 0.5);
 }
 
 /* Định dạng chân trang */
 footer {
-    background-color: #343a40;
-    padding: 10px 0;
+	background-color: #343a40;
+	padding: 10px 0;
 }
 
 /* Định dạng logo chân trang */
 .footer-logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #f8f9fa;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-family: 'Arial', sans-serif;
+	font-size: 1.5rem;
+	font-weight: bold;
+	color: #f8f9fa;
+	margin-bottom: 0.5rem;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	font-family: "Arial", sans-serif;
 }
 
 /* Định dạng phần chữ nhỏ phía dưới logo chân trang */
 .sub-footer-logo {
-    font-size: 1rem;
-    color: #f8f9fa;
+	font-size: 1rem;
+	color: #f8f9fa;
 }
 
 /* Định dạng bảng điều khiển */
 .control-panel {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-sizing: border-box;
-    z-index: 1;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	box-sizing: border-box;
+	z-index: 1;
 }
 
 /* Các nút điều khiển (được sắp xếp ngang nhau) */
 .control-buttons {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 10px;
+	display: flex;
+	justify-content: center;
+	margin-bottom: 10px;
 }
 
 /* Định dạng thông số hiển thị */
 .measurements {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 10px;
 }
+
+/* Định dạng modal */
+.modal {
+	display: none;
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgb(0, 0, 0);
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+	background-color: #fefefe;
+	margin: 15% auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 80%;
+	max-width: 600px;
+	border-radius: 10px;
+	position: relative;
+}
+
+.close-button {
+	color: #aaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.close-button:hover,
+.close-button:focus {
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+/* ...existing code... */
+
+.force-vector {
+	position: absolute;
+	background-color: red;
+	display: none;
+}
+
+.thrust {
+	height: 3px;
+	top: 50%;
+	transform: translateY(-50%);
+	left: 50%;
+	background-color: rgb(210, 227, 227);
+}
+
+.friction {
+	height: 3px;
+	top: 50%;
+	transform: translateY(-50%);
+	right: 50%;
+	background-color: purple;
+}
+
+.gravity {
+	width: 3px;
+	left: 50%;
+	transform: translateX(-50%);
+	top: 50%;
+	background-color: blue;
+}
+
+.normal {
+	width: 3px;
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: 50%;
+	background-color: yellow;
+}
+
+/* Arrowhead styles */
+.arrowhead {
+	width: 0;
+	height: 0;
+	border-style: solid;
+	position: absolute;
+}
+
+.arrowhead.right {
+	border-width: 5px 0 5px 10px;
+	border-color: transparent transparent transparent rgb(210, 227, 227);
+	right: -10px;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.arrowhead.left {
+	border-width: 5px 10px 5px 0;
+	border-color: transparent rgb(128, 0, 128) transparent transparent;
+	left: -10px;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.arrowhead.down {
+	border-width: 10px 5px 0 5px;
+	border-color: rgb(0, 0, 255) transparent transparent transparent;
+	bottom: -10px;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.arrowhead.up {
+	border-width: 0 5px 10px 5px;
+	border-color: transparent transparent rgb(255, 255, 0) transparent;
+	top: -10px;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+/* ...existing code... */
